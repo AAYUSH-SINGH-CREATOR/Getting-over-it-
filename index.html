@@ -1,15 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>getting over it</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting over it</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-    <h1>Getting over</h1>
+  <div class="game-container">
+    <header class="game-header">
+      <div class="title-area">
+        <h1>Climb Up! <span>A Physics Climbing Project</span></h1>
+      </div>
+      <div class="hud">
+        <div class="hud-item">
+          <span class="hud-label">Altitude:</span>
+          <span id="altitudeText" class="hud-value">0 m</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Progress:</span>
+          <span id="progressText" class="hud-value">0%</span>
+        </div>
+        <button id="restartBtn" class="btn btn-restart" title="Press 'R' to reset">Restart (R)</button>
+      </div>
+    </header>
 
-    <script src="script.js"></script>
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="900" height="650"></canvas>
+    </div>
+
+    <footer class="game-footer">
+      <div class="guide-box">
+        <h3>How to Play:</h3>
+        <ul>
+          <li><strong>Move your mouse:</strong> Swings the hammer around your character.</li>
+          <li><strong>Push into rocks:</strong> Press the hammer against platforms to lift and vault yourself up.</li>
+          <li><strong>Hook ledges:</strong> Place the hammer head on top of ledges and pull down to climb.</li>
+          <li><strong>Press 'R':</strong> Restart at any time if you get stuck or want to try again.</li>
+        </ul>
+      </div>
+      <div class="tip-box">
+        <p id="motivationalText">"Every journey to the summit begins with a single push."</p>
+      </div>
+    </footer>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
