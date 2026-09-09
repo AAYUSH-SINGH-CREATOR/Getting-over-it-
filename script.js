@@ -1,10 +1,10 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let mouseX=-1000;
-let mouseY=-1000;
+let mouseX = -1000;
+let mouseY = -1000;
 
-canvas.addEventListener("mousemove", (event)=>{
+canvas.addEventListener("mousemove", (event) => {
   mouseX = event.clientX;
   mouseY = event.clientY;
 });
@@ -12,53 +12,53 @@ canvas.addEventListener("mousemove", (event)=>{
 class Star {
 
   constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
 
-      this.radius = Math.random() * 1 + 0.3;
+    this.radius = Math.random() * 1 + 0.3;
 
-      this.baseOpacity =
-          Math.random() * 0.6 + 0.3;
+    this.baseOpacity =
+      Math.random() * 0.6 + 0.3;
 
-      this.opacity = this.baseOpacity;
+    this.opacity = this.baseOpacity;
 
-      this.twinkle = Math.random() * Math.PI * 2;
+    this.twinkle = Math.random() * Math.PI * 2;
   }
 
   update() {
 
-      this.twinkle+= 0.02;
-      let distance= Math.hypot(
-        mouseX-this.x, mouseY-this.y);
-      if (distance<70){
-        this.opacity=
+    this.twinkle += 0.02;
+    let distance = Math.hypot(
+      mouseX - this.x, mouseY - this.y);
+    if (distance < 70) {
+      this.opacity =
         0.5 +
-        Math.sin(this.twinkle*6) * 0.4;
-      }
-      else{
-        this.opacity=
+        Math.sin(this.twinkle * 6) * 0.4;
+    }
+    else {
+      this.opacity =
         this.baseOpacity +
         Math.sin(this.twinkle) * 0.5;
-      }
-      
+    }
+
   }
 
   draw() {
 
-      ctx.beginPath();
+    ctx.beginPath();
 
-      ctx.arc(
-          this.x,
-          this.y,
-          this.radius,
-          0,
-          Math.PI * 2
-      );
+    ctx.arc(
+      this.x,
+      this.y,
+      this.radius,
+      0,
+      Math.PI * 2
+    );
 
-      ctx.fillStyle =
-          `rgba(255,255,255,${this.opacity})`;
+    ctx.fillStyle =
+      `rgba(255,255,255,${this.opacity})`;
 
-      ctx.fill();
+    ctx.fill();
   }
 }
 
@@ -106,7 +106,7 @@ function updatePhysics() {
   playerY += playerVy;
 
   isGrounded = false;
-  
+
   if (playerY + playerRadius + 4 > 520) {
     playerY = 520 - playerRadius - 4;
     playerVy = 0;
@@ -126,7 +126,7 @@ function updatePhysics() {
 function drawPlatforms() {
   for (let i = 0; i < platforms.length; i++) {
     const p = platforms[i];
-    
+
     ctx.fillStyle = p.color;
     ctx.fillRect(p.x, p.y, p.width, p.height);
 
@@ -150,21 +150,21 @@ for (let i = 0; i < 3000; i++) {
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  starsArray.forEach(star=> {
+  starsArray.forEach(star => {
     star.draw();
   });
-  
+
   drawPlatforms();
   drawPlayerAndHammer();
 }
 
 function gameLoop() {
   updatePhysics();
-  starsArray.forEach(star=> {
+  starsArray.forEach(star => {
     star.update();
   });
   draw();
-  
+
   requestAnimationFrame(gameLoop);
 }
 
