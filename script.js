@@ -17,6 +17,10 @@ let playerVx = 0;
 let playerVy = 0;
 let isGrounded = false;
 
+const platforms = [
+  { x: 0, y: 520, width: 900, height: 150, color: "#2d3436", type: "ground" }
+];
+
 function resetPlayer() {
   playerX = 450;
   playerY = 470;
@@ -37,6 +41,36 @@ function updatePhysics() {
 
   playerX += playerVx;
   playerY += playerVy;
+
+  isGrounded = false;
+  
+  if (playerY + playerRadius + 4 > 520) {
+    playerY = 520 - playerRadius - 4;
+    playerVy = 0;
+    isGrounded = true;
+  }
+
+  if (playerX < 0 + playerRadius) {
+    playerX = 0 + playerRadius;
+    playerVx = 0;
+  }
+  if (playerX > 900 - playerRadius) {
+    playerX = 900 - playerRadius;
+    playerVx = 0;
+  }
+}
+
+function drawPlatforms() {
+  for (let i = 0; i < platforms.length; i++) {
+    const p = platforms[i];
+    
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x, p.y, p.width, p.height);
+
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(p.x, p.y, p.width, p.height);
+  }
 }
 
 function drawPlayerAndHammer() {
@@ -49,6 +83,7 @@ function drawPlayerAndHammer() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
+  drawPlatforms();
   drawPlayerAndHammer();
 }
 
