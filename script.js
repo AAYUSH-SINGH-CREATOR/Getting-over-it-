@@ -115,6 +115,50 @@ function updatePhysics() {
   playerY += playerVy;
 }
 
+function drawBackground() {
+  const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+
+  if (cameraY > 0) {
+    skyGradient.addColorStop(0, "#1f293d");
+    skyGradient.addColorStop(1, "#3b2a3a");
+  } else if (cameraY > -1400) {
+    skyGradient.addColorStop(0, "#0c1322");
+    skyGradient.addColorStop(1, "#1e2a44");
+  } else {
+    skyGradient.addColorStop(0, "#050811");
+    skyGradient.addColorStop(1, "#111827");
+  }
+
+  ctx.fillStyle = skyGradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (cameraY < -300) {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+    for (let s = 0; s < 30; s++) {
+      const starX = (s * 97) % canvas.width;
+      const starY = ((s * 131) - cameraY * 0.15) % canvas.height;
+      ctx.fillRect(starX, starY, 2, 2);
+    }
+  }
+}
+
+
+function drawPlatforms() {
+  for (let i = 0; i < platforms.length; i++) {
+    const p = platforms[i];
+    ctx.fillStyle = p.color || "#3d3d3d";
+    ctx.fillRect(p.x, p.y, p.width, p.height);
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(p.x, p.y, p.width, p.height);
+
+    if (p.type !== "wall") {
+      ctx.fillStyle = p.y < -1200 ? "#ecf0f1" : "#27ae60";
+      ctx.fillRect(p.x, p.y, p.width, 5);
+    }
+  }
+}
+
 function drawPlayerAndHammer() {
   ctx.fillStyle = "#2f3640";
   ctx.beginPath();
@@ -124,8 +168,12 @@ function drawPlayerAndHammer() {
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+  drawBackground();
+  ctx.save();
+  ctx.translate(0, -cameraY);
+  drawPlatforms();
   drawPlayerAndHammer();
+  ctx.restore();
 }
 
 function gameLoop() {
