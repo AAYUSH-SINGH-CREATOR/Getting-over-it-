@@ -209,6 +209,40 @@ function updatePhysics() {
 
   playerX += playerVx;
   playerY += playerVy;
+
+  const mouseWorldX = mouseScreenX;
+  const mouseWorldY = mouseScreenY + cameraY;
+  const dx = mouseWorldX - playerX;
+  const dy = mouseWorldY - playerY;
+
+  hammerAngle = Math.atan2(dy, dx);
+
+  const mouseDistance = Math.sqrt(dx * dx + dy * dy);
+  let currentReach = mouseDistance;
+  if (currentReach > hammerMaxLength) currentReach = hammerMaxLength;
+  if (currentReach < hammerMinLength) currentReach = hammerMinLength;
+
+  prevHammerTipX = hammerTipX;
+  prevHammerTipY = hammerTipY;
+  hammerTipX = playerX + Math.cos(hammerAngle) * currentReach;
+  hammerTipY = playerY + Math.sin(hammerAngle) * currentReach;
+
+  handleHammerCollisions();
+  handlePlayerCollisions();
+  handleHammerCollisions();
+  handlePlayerCollisions();
+
+  if (playerX < 50 + playerRadius) {
+    playerX = 50 + playerRadius;
+    playerVx = 0;
+  }
+  if (playerX > 850 - playerRadius) {
+    playerX = 850 - playerRadius;
+    playerVx = 0;
+  }
+
+  const targetCameraY = playerY - 390;
+  cameraY += (targetCameraY - cameraY) * 0.1;
 }
 
 function drawBackground() {
