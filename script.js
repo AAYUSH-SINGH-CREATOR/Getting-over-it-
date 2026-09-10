@@ -191,6 +191,38 @@ function handleHammerCollisions() {
 
       playerVx -= tangentX * tangentialSwing * 0.28;
       playerVy -= tangentY * tangentialSwing * 0.28;
+
+      if (swingSpeed > 3 && Math.random() < 0.3) {
+        createDustParticle(hit.contactX, hit.contactY);
+      }
+
+    }
+  }
+}
+
+function createDustParticle(x, y) {
+  for (let i = 0; i < 3; i++) {
+    particles.push({
+      x,
+      y,
+      vx: (Math.random() - 0.5) * 4,
+      vy: (Math.random() - 0.8) * 3,
+      size: Math.random() * 3 + 2,
+      alpha: 1,
+      color: "#bdc3c7"
+    });
+  }
+}
+
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.alpha -= 0.04;
+
+    if (p.alpha <= 0) {
+      particles.splice(i, 1);
     }
   }
 }
@@ -243,6 +275,7 @@ function updatePhysics() {
 
   const targetCameraY = playerY - 390;
   cameraY += (targetCameraY - cameraY) * 0.1;
+  updateParticles();
 }
 
 function drawBackground() {
@@ -364,6 +397,17 @@ const auroraLayers = [
   new AuroraWave(canvas.height * 0.55, 100, 0.0015, 0.002, ['rgba(180, 0, 255, 0.9)', 'rgba(0, 255, 200, 0.6)', 'rgba(0, 0, 0, 0)'])
 ];
 
+function drawParticles() {
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.alpha);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x, p.y, p.size, p.size);
+    ctx.restore();
+  }
+}
+
 function drawPlayerAndHammer() {
   ctx.strokeStyle = "#a0522d";
   ctx.lineWidth = 7;
@@ -444,6 +488,7 @@ function draw() {
   ctx.save();
   ctx.translate(0, -cameraY);
   drawPlatforms();
+  drawParticles();
   drawPlayerAndHammer();
   ctx.restore();
 }
