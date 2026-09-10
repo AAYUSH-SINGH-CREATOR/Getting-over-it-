@@ -1,5 +1,5 @@
 const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext('2d');
 
 let mouseScreenX = 450;
 let mouseScreenY = 300;
@@ -61,64 +61,85 @@ hammerTipX=playerX+Math.cos(hammerAngle)*currentReach;
 hammerTipY=playerY=Math.sin(hammerAngle)*currentReach;
 
 class Star {
-
-  constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-
-      this.radius = Math.random() * 1 + 0.3;
-
-      this.baseOpacity =
-          Math.random() * 0.6 + 0.3;
-
-      this.opacity = this.baseOpacity;
-
-      this.twinkle = Math.random() * Math.PI * 2;
-  }
-
-  update() {
-
-      this.twinkle+= 0.02;
-      let distance= Math.hypot(
-        mouseX-this.x, mouseY-this.y);
-      if (distance<70){
-        this.opacity=
-        0.5 +
-        Math.sin(this.twinkle*6) * 0.4;
-      }
-      else{
-        this.opacity=
-        this.baseOpacity +
-        Math.sin(this.twinkle) * 0.5;
-      }
-      
-  }
-
-  draw() {
-
-      ctx.beginPath();
-
-      ctx.arc(
-          this.x,
-          this.y,
-          this.radius,
-          0,
-          Math.PI * 2
-      );
-
-      ctx.fillStyle =
-          `rgba(255,255,255,${this.opacity})`;
-
-      ctx.fill();
-  }
-}
-
-
-
 const altitudeText = document.getElementById("altitudeText");
 const progressText = document.getElementById("progressText");
 const restartBtn = document.getElementById("restartBtn");
 const motivationalText = document.getElementById("motivationalText");
+
+// if(restartBtn){
+//   resetPlayer();
+// }
+window.addEventListener("keydown", (e)=>{
+  if(e.key = "R"){
+  resetPlayer();
+  }
+  console.log("hello ji");
+})
+
+const gravity = 0.35;
+const friction = 0.98;
+const groundfriction = 0.9;
+
+let playerX = 450;
+let playerY = 470;
+let playersize = 25;
+let playerdx = 0;
+let playerdy = 0;
+let isgrounded = false;
+
+function resetPlayer() {
+  playerX = 450;
+  playerY = 470;
+  playerdx = 0;
+  playerdy = 0;
+  isgrounded = false;
+}
+
+const hammerMaxLength = 95;
+const hammerMinLength = 35;
+const hammerHeadRadius = 14;
+
+let hammerAngle = -Math.PI / 2;
+let hammerTipX = playerX;
+let hammerTipY = playerY - hammerMaxLength;
+let prevHammerTipX = hammerTipX;
+let prevHammerTipY = hammerTipY;
+
+function updatePhysics(){
+  playerdy+=gravity;
+  playerdx*=friction;
+  playerdy*=friction;
+
+  if(isgrounded){
+    playerdx*=groundfriction;
+  }
+
+  playerX+=playerdx;
+  playerY+=playerdy;
+
+   const dx = mouseX - playerX;
+  const dy = mouseY - playerY;
+
+  hammerAngle = Math.atan2(dy, dx);
+  const mousedist = Math.sqrt(dx*dx + dy*dy);
+
+  let currentReach = mousedist;
+  if (currentReach > hammerMaxLength) currentReach = hammerMaxLength;
+  if (currentReach < hammerMinLength) currentReach = hammerMinLength;
+
+  prevHammerTipX = hammerTipX;
+  prevHammerTipY = hammerTipY;
+
+  hammerTipX = playerX + Math.cos(hammerAngle) * currentReach;
+  hammerTipY = playerY + Math.sin(hammerAngle) * currentReach;
+
+
+  isgrounded = false;
+  if(playerY+playersize>520){
+    playerY = 520 - playersize;
+    playerdy = 0;
+    isgrounded = true;
+  }
 
 const gravity = 0.35;
 const friction = 0.985;
@@ -129,13 +150,16 @@ let startTime = Date.now();
 let fallCount = 0;
 let highestAltitudeReached = 0;
 let lastPlayerY = 0;
+  if(playerX < playersize){
+    playerX = playersize;
+    playerdx = 0;
+  }
 
-let playerX = 450;
-let playerY = 470;
-let playerRadius = 24;
-let playerVx = 0;
-let playerVy = 0;
-let isGrounded = false;
+  if(playerX > 900 - playersize){
+    playerX = 900-playersize;
+    playerdx = 0;
+  }
+}
 
 function resetPlayer() {
   playerX = 450;
@@ -207,47 +231,124 @@ const summitY = -2380;
 
 function updatePhysics() {
   playerVy += gravity;
+function checkCircleRectCollision(circleX, circleY, radius, rect) {
+  const closestX = Math.max(rect.x, Math.min(circleX, rect.x + rect.width));
+  const closestY = Math.max(rect.y, Math.min(circleY, rect.y + rect.height));
 
-  playerVx *= friction;
-  playerVy *= friction;
+  const diffX = circleX - closestX;
+  const diffY = circleY - closestY;
+  const distance = Math.sqrt(diffX * diffX + diffY * diffY);
 
-  if (isGrounded) {
-    playerVx *= groundFriction;
+  if (distance < radius) {
+    let nx = 0;
+    let ny = -1;
+    let overlap = radius - distance;
+
+    if (distance > 0.001) {
+      nx = diffX / distance;
+      ny = diffY / distance;
+    } else {
+      const leftDist = circleX - rect.x;
+      const rightDist = (rect.x + rect.width) - circleX;
+      const topDist = circleY - rect.y;
+      const bottomDist = (rect.y + rect.height) - circleY;
+
+      const minDist = Math.min(leftDist, rightDist, topDist, bottomDist);
+      if (minDist === topDist) { nx = 0; ny = -1; overlap = topDist + radius; }
+      else if (minDist === bottomDist) { nx = 0; ny = 1; overlap = bottomDist + radius; }
+      else if (minDist === leftDist) { nx = -1; ny = 0; overlap = leftDist + radius; }
+      else { nx = 1; ny = 0; overlap = rightDist + radius; }
+    }
+
+    return {
+      colliding: true,
+      nx: nx,
+      ny: ny,
+      overlap: overlap,
+      contactX: closestX,
+      contactY: closestY
+    };
   }
 
-  playerX += playerVx;
-  playerY += playerVy;
+  return { colliding: false };
 }
 
-function drawPlayerAndHammer() {
-  ctx.fillStyle = "#2f3640";
+function drawinghammer () {
+
+  ctx.strokeStyle = "gray";
+  ctx.lineWidth = 7;
   ctx.beginPath();
-  ctx.arc(playerX, playerY + 4, playerRadius, 0, Math.PI * 2);
+  ctx.moveTo(playerX, playerY );
+  ctx.lineTo(hammerTipX, hammerTipY);
+  ctx.stroke();
+
+
+  ctx.save();
+  ctx.translate(hammerTipX, hammerTipY);
+  ctx.rotate(hammerAngle + Math.PI / 2);
+
+  ctx.fillStyle = "#7f8c8d";
+  ctx.fillRect(-14, -10, 28, 20);
+
+  ctx.strokeStyle = "#bdc3c7";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(-14, -10, 28, 20);
+
+  ctx.fillStyle = "#2c3e50";
+  ctx.fillRect(-4, -4, 8, 8);
+  ctx.restore();
+
+ ctx.fillStyle = 'yellow';
+  ctx.beginPath();
+  ctx.arc(playerX, playerY, playersize, 0, Math.PI*2);
   ctx.fill();
 }
-const starsArray = [];
 
-for (let i = 0; i < 3000; i++) {
-  starsArray.push(new Star());
+function draw (){
+  ctx.clearRect(0,0, canvas.width , canvas.height);
+
+  drawinghammer();
 }
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  starsArray.forEach(star=> {
-    star.draw();
-  });
-  
-  drawPlayerAndHammer();
-}
-
-function gameLoop() {
+function update(){
   updatePhysics();
-  starsArray.forEach(star=> {
-    star.update();
-  });
   draw();
-  
-  requestAnimationFrame(gameLoop);
+  requestAnimationFrame(update);
 }
 
-requestAnimationFrame(gameLoop);
+
+requestAnimationFrame(update);
+
+
+const plateform  = [{
+x:0,
+y:520,
+width:900,
+height:150,
+color:"green",
+}]
+
+const p = plateform[0];
+ctx.fillStyle = "green";
+ctx.fillRect(p.x, p.y, p.width, p.height);
+ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(p.x, p.y, p.width, p.height);
+
+
+
+    let mouseX = 450;
+    let mouseY = 300;
+
+    canvas.addEventListener("mousemove", (event)=>{
+      const rect = canvas.getBoundingClientRect();
+      console.log("getting mouse coordinated");
+      mouseX = event.clientX-rect.left;
+      mouseY = event.clientY-rect.top;
+    })
+
+    
+  
+
+
+
