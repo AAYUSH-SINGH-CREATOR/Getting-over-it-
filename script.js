@@ -12,11 +12,6 @@ r
 
 });
 
-canvas.addEventListener("mousemove", (event)=>{
-  mouseX = event.clientX;
-  mouseY = event.clientY;
-});
-
 window.addEventListener("keydown", function(event) {
   if (event.key === "r" || event.key === "R") {
     resetPlayer();
@@ -25,6 +20,45 @@ window.addEventListener("keydown", function(event) {
 
 restartBtn.addEventListener("click", resetPlayer);
 playAgainBtn.addEventListener("click", resetPlayer);
+
+function updatePhysics(){
+  if (gameWon) return;
+  playerVy+=gravity;
+  playerVx*=friction;
+  playerVy*=friction;
+
+  if (isGrounded){
+    playerVx*=groundFriction;
+  }
+}
+
+playerX+=playerVx;
+playerY+=playerVy;
+
+const mouseWorldX=mouseScreenX;
+const mouseWorldY=mouseScreeny+cameraY;
+
+const dx=mouseWorldX-playerX;
+const dy=mouseWorldY-playerY;
+
+hammerAngle=Math.atan2(dy/dx);
+
+const mouseDistance= Math.sqrt(dx*dx+dy*dy);
+
+let currentReach=mouseDistance;
+
+if (currentReach>hammerMaxLength){
+  currentReach=hammerMaxLength;
+}
+if (currentReach<hammerMinLength){
+  currentReach=hammerMinLength;
+}
+
+prevHammerTipX=hammerTipX;
+prevHammerTipY=hammerTipY;
+
+hammerTipX=playerX+Math.cos(hammerAngle)*currentReach;
+hammerTipY=playerY=Math.sin(hammerAngle)*currentReach;
 
 class Star {
 
