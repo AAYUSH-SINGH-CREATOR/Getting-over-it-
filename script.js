@@ -261,8 +261,7 @@ function updatePhysics() {
 
   handleHammerCollisions();
   handlePlayerCollisions();
-  handleHammerCollisions();
-  handlePlayerCollisions();
+  
 
   if (playerX < 50 + playerRadius) {
     playerX = 50 + playerRadius;
