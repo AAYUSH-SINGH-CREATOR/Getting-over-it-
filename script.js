@@ -1,13 +1,30 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let mouseX=-1000;
-let mouseY=-1000;
+let mouseScreenX = 450;
+let mouseScreenY = 300;
+
+canvas.addEventListener("mousemove", function(event) {
+  const rect = canvas.getBoundingClientRect();
+r
+  mouseScreenX = event.clientX - rect.left;
+  mouseScreenY = event.clientY - rect.top;
+
+});
 
 canvas.addEventListener("mousemove", (event)=>{
   mouseX = event.clientX;
   mouseY = event.clientY;
 });
+
+window.addEventListener("keydown", function(event) {
+  if (event.key === "r" || event.key === "R") {
+    resetPlayer();
+  }
+});
+
+restartBtn.addEventListener("click", resetPlayer);
+playAgainBtn.addEventListener("click", resetPlayer);
 
 class Star {
 
@@ -72,6 +89,12 @@ const motivationalText = document.getElementById("motivationalText");
 const gravity = 0.35;
 const friction = 0.985;
 const groundFriction = 0.92;
+let cameraY = 0;  
+let gameWon = false;
+let startTime = Date.now();
+let fallCount = 0;
+let highestAltitudeReached = 0;
+let lastPlayerY = 0;
 
 let playerX = 450;
 let playerY = 470;
@@ -86,7 +109,67 @@ function resetPlayer() {
   playerVx = 0;
   playerVy = 0;
   isGrounded = false;
+  gameWon = false;
+  startTime = Date.now();
+  fallCount = 0;
+  highestAltitudeReached = 0;
+  lastPlayerY = playerY;
+  winOverlay.classList.add("hidden");
 }
+
+const hammerMaxLength = 95;
+const hammerMinLength = 35;   
+const hammerHeadRadius = 14;
+
+let hammerAngle = -Math.PI / 2;  
+let hammerTipX = playerX;     
+let hammerTipY = playerY - hammerMaxLength; 
+let prevHammerTipX = hammerTipX; 
+let prevHammerTipY = hammerTipY;
+
+const platforms = [
+ 
+  { x: 0, y: 520, width: 900, height: 150, color: "#2d3436", type: "ground" },  
+  { x: 0, y: -2600, width: 45, height: 3200, color: "#1e272e", type: "wall" }, 
+  { x: 855, y: -2600, width: 45, height: 3200, color: "#1e272e", type: "wall" },
+
+ 
+  { x: 260, y: 440, width: 140, height: 80, color: "#485460", label: "Starter Rock" },
+  { x: 500, y: 370, width: 160, height: 70, color: "#485460" },
+  { x: 230, y: 280, width: 150, height: 50, color: "#485460" },
+
+
+  { x: 520, y: 180, width: 140, height: 45, color: "#3d3d3d" },
+  { x: 310, y: 80, width: 130, height: 40, color: "#3d3d3d" },
+  { x: 100, y: -30, width: 150, height: 45, color: "#3d3d3d" },
+  { x: 430, y: -140, width: 180, height: 50, color: "#3d3d3d" },
+  { x: 670, y: -250, width: 140, height: 45, color: "#3d3d3d" },
+
+  
+  { x: 45, y: -400, width: 280, height: 50, color: "#2f3640" },
+  { x: 575, y: -530, width: 280, height: 50, color: "#2f3640" },
+  { x: 45, y: -670, width: 300, height: 50, color: "#2f3640" },
+  { x: 555, y: -810, width: 300, height: 50, color: "#2f3640" },
+  { x: 405, y: -950, width: 90, height: 45, color: "#57606f" },
+
+
+  { x: 180, y: -1100, width: 250, height: 45, color: "#2f3640" },
+  { x: 570, y: -1250, width: 140, height: 45, color: "#3d3d3d" },
+  { x: 250, y: -1400, width: 170, height: 45, color: "#3d3d3d" },
+  { x: 480, y: -1550, width: 190, height: 40, color: "#57606f" },
+  { x: 190, y: -1700, width: 140, height: 45, color: "#3d3d3d" },
+
+  { x: 520, y: -1860, width: 150, height: 45, color: "#2f3640" },
+  { x: 320, y: -2010, width: 130, height: 45, color: "#3d3d3d" },
+  { x: 490, y: -2170, width: 170, height: 45, color: "#2f3640" },
+
+
+  { x: 250, y: -2380, width: 400, height: 60, color: "#d35400", type: "summit" }
+];
+
+
+const summitY = -2380;
+
 
 function updatePhysics() {
   playerVy += gravity;
