@@ -276,6 +276,7 @@ function updatePhysics() {
   const targetCameraY = playerY - 390;
   cameraY += (targetCameraY - cameraY) * 0.1;
   updateParticles();
+  updateGameInfo();
 }
 
 function drawBackground() {
@@ -522,6 +523,20 @@ function draw() {
   drawParticles();
   drawPlayerAndHammer();
   ctx.restore();
+}
+
+function updateGameInfo() {
+  const totalClimbDistance = 470 - summitY;
+  const currentClimb = Math.max(0, 470 - playerY);
+  const meters = Math.round(currentClimb / 28);
+  altitudeText.textContent = meters + " m";
+
+  const percentage = Math.min(100, Math.round(currentClimb / totalClimbDistance * 100));
+  progressText.textContent = percentage + "%";
+
+  if (meters > highestAltitudeReached) {
+    highestAltitudeReached = meters;
+  }
 }
 
 function gameLoop() {
