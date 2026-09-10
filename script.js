@@ -1,6 +1,21 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+const hammerSound = new Audio("sounds/hammer-hit.mp3");
+const winSound = new Audio("sounds/win.mp3");
+
+hammerSound.volume = 0.7;
+winSound.volume = 0.6;
+
+window.addEventListener("click", () => {
+  hammerSound.play().then(() => {
+    hammerSound.pause();
+    hammerSound.currentTime = 0;
+  }).catch(() => {});
+}, { once: true });
+
+let lastHammerSoundTime = 0;
+
 const altitudeText = document.getElementById("altitudeText");
 const progressText = document.getElementById("progressText");
 const restartBtn = document.getElementById("restartBtn");
@@ -196,6 +211,15 @@ function handleHammerCollisions() {
         createDustParticle(hit.contactX, hit.contactY);
       }
 
+      if (swingSpeed > 3) {
+        const now = Date.now();
+
+        if (now - lastHammerSoundTime > 120) {
+          hammerSound.currentTime = 0;
+          hammerSound.play().catch(() => {});
+          lastHammerSoundTime = now;
+        }
+      }
     }
   }
 }
@@ -542,10 +566,13 @@ function updateGameInfo() {
 function checkWinCondition() {
   if (playerY <= summitY + 20 && !gameWon) {
     gameWon = true;
+    winSound.currentTime = 0;
+    winSound.play().catch(() => {});
     const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
     winTimeText.textContent = elapsedSeconds + "s";
     winFallsText.textContent = fallCount;
     winOverlay.classList.remove("hidden");
+    
   }
 }
 
