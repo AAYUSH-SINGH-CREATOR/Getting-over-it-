@@ -102,7 +102,102 @@ window.addEventListener("keydown", function(event) {
 restartBtn.addEventListener("click", resetPlayer);
 playAgainBtn.addEventListener("click", resetPlayer);
 
+function checkCircleRectCollision(circleX, circleY, radius, rect) {
+  const closestX = Math.max(rect.x, Math.min(circleX, rect.x + rect.width));
+  const closestY = Math.max(rect.y, Math.min(circleY, rect.y + rect.height));
+  const diffX = circleX - closestX;
+  const diffY = circleY - closestY;
+  const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+
+  if (distance < radius) {
+    let nx = 0;
+    let ny = -1;
+    let overlap = radius - distance;
+
+    if (distance > 0.001) {
+      nx = diffX / distance;
+      ny = diffY / distance;
+    } else {
+      const leftDist = circleX - rect.x;
+      const rightDist = rect.x + rect.width - circleX;
+      const topDist = circleY - rect.y;
+      const bottomDist = rect.y + rect.height - circleY;
+      const minDist = Math.min(leftDist, rightDist, topDist, bottomDist);
+
+      if (minDist === topDist) { nx = 0; ny = -1; overlap = topDist + radius; }
+      else if (minDist === bottomDist) { nx = 0; ny = 1; overlap = bottomDist + radius; }
+      else if (minDist === leftDist) { nx = -1; ny = 0; overlap = leftDist + radius; }
+      else { nx = 1; ny = 0; overlap = rightDist + radius; }
+    }
+
+    return { colliding: true, nx, ny, overlap, contactX: closestX, contactY: closestY };
+  }
+
+  return { colliding: false };
+}
+
+function handlePlayerCollisions() {
+  isGrounded = false;
+
+  for (let i = 0; i < platforms.length; i++) {
+    const hit = checkCircleRectCollision(playerX, playerY, playerRadius, platforms[i]);
+
+    if (hit.colliding) {
+      playerX += hit.nx * hit.overlap;
+      playerY += hit.ny * hit.overlap;
+
+      const dot = playerVx * hit.nx + playerVy * hit.ny;
+      if (dot < 0) {
+        playerVx -= dot * hit.nx;
+        playerVy -= dot * hit.ny;
+      }
+
+      if (hit.ny < -0.6) {
+        isGrounded = true;
+      }
+      const tangentX = -hit.ny;
+    }
+    
+  }
+}
+
+function handleHammerCollisions() {
+  for (let i = 0; i < platforms.length; i++) {
+    const hit = checkCircleRectCollision(hammerTipX, hammerTipY, hammerHeadRadius, platforms[i]);
+
+    if (hit.colliding) {
+      hammerTipX += hit.nx * hit.overlap;
+      hammerTipY += hit.ny * hit.overlap;
+      playerX += hit.nx * hit.overlap * 0.85;
+      playerY += hit.ny * hit.overlap * 0.85;
+      playerVx += hit.nx * hit.overlap * 0.28;
+      playerVy += hit.ny * hit.overlap * 0.28;
+
+      const maxSpeed = 16;
+      if (playerVx > maxSpeed) playerVx = maxSpeed;
+      if (playerVx < -maxSpeed) playerVx = -maxSpeed;
+      if (playerVy > maxSpeed) playerVy = maxSpeed;
+      if (playerVy < -maxSpeed) playerVy = -maxSpeed;
+
+      const swingSpeed = Math.abs(hammerTipX - prevHammerTipX) + Math.abs(hammerTipY - prevHammerTipY);
+    
+      const tangentX = -hit.ny;
+      const tangentY = hit.nx;
+
+      const tipMoveX = hammerTipX - prevHammerTipX;
+      const tipMoveY = hammerTipY - prevHammerTipY;
+
+      const tangentialSwing = tipMoveX * tangentX + tipMoveY * tangentY;
+
+      playerVx -= tangentX * tangentialSwing * 0.28;
+      playerVy -= tangentY * tangentialSwing * 0.28;
+    }
+  }
+}
+
 function updatePhysics() {
+  if (gameWon) return;
+
   playerVy += gravity;
 
   playerVx *= friction;
