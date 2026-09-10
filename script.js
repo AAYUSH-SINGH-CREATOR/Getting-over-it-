@@ -397,6 +397,36 @@ const auroraLayers = [
   new AuroraWave(canvas.height * 0.55, 100, 0.0015, 0.002, ['rgba(180, 0, 255, 0.9)', 'rgba(0, 255, 200, 0.6)', 'rgba(0, 0, 0, 0)'])
 ];
 
+function drawSummitFlag() {
+  const poleX = 500;
+  const poleY = summitY;
+
+  ctx.strokeStyle = "#f5f6fa";
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(poleX, poleY);
+  ctx.lineTo(poleX, poleY - 70);
+  ctx.stroke();
+
+  ctx.fillStyle = "#f1c40f";
+  ctx.beginPath();
+  ctx.moveTo(poleX, poleY - 70);
+  ctx.lineTo(poleX + 45, poleY - 55);
+  ctx.lineTo(poleX, poleY - 40);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = "#e67e22";
+  ctx.beginPath();
+  ctx.arc(poleX, poleY - 72, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "#f1c40f";
+  ctx.font = "bold 16px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("SUMMIT PEAK", poleX, poleY - 85);
+}
+
 function drawParticles() {
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i];
@@ -488,6 +518,7 @@ function draw() {
   ctx.save();
   ctx.translate(0, -cameraY);
   drawPlatforms();
+  drawSummitFlag();
   drawParticles();
   drawPlayerAndHammer();
   ctx.restore();
