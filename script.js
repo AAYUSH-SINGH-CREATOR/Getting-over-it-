@@ -39,6 +39,36 @@ let hammerTipY = playerY - hammerMaxLength;
 let prevHammerTipX = hammerTipX;
 let prevHammerTipY = hammerTipY;
 
+const platforms = [
+  { x: 0, y: 520, width: 900, height: 150, color: "#2d3436", type: "ground" },
+  { x: 0, y: -2600, width: 45, height: 3200, color: "#1e272e", type: "wall" },
+  { x: 855, y: -2600, width: 45, height: 3200, color: "#1e272e", type: "wall" },
+  { x: 260, y: 440, width: 140, height: 80, color: "#485460", label: "Starter Rock" },
+  { x: 500, y: 370, width: 160, height: 70, color: "#485460" },
+  { x: 230, y: 280, width: 150, height: 50, color: "#485460" },
+  { x: 520, y: 180, width: 140, height: 45, color: "#3d3d3d" },
+  { x: 310, y: 80, width: 130, height: 40, color: "#3d3d3d" },
+  { x: 100, y: -30, width: 150, height: 45, color: "#3d3d3d" },
+  { x: 430, y: -140, width: 180, height: 50, color: "#3d3d3d" },
+  { x: 670, y: -250, width: 140, height: 45, color: "#3d3d3d" },
+  { x: 45, y: -400, width: 280, height: 50, color: "#2f3640" },
+  { x: 575, y: -530, width: 280, height: 50, color: "#2f3640" },
+  { x: 45, y: -670, width: 300, height: 50, color: "#2f3640" },
+  { x: 555, y: -810, width: 300, height: 50, color: "#2f3640" },
+  { x: 405, y: -950, width: 90, height: 45, color: "#57606f" },
+  { x: 180, y: -1100, width: 250, height: 45, color: "#2f3640" },
+  { x: 570, y: -1250, width: 140, height: 45, color: "#3d3d3d" },
+  { x: 250, y: -1400, width: 170, height: 45, color: "#3d3d3d" },
+  { x: 480, y: -1550, width: 190, height: 40, color: "#57606f" },
+  { x: 190, y: -1700, width: 140, height: 45, color: "#3d3d3d" },
+  { x: 520, y: -1860, width: 150, height: 45, color: "#2f3640" },
+  { x: 320, y: -2010, width: 130, height: 45, color: "#3d3d3d" },
+  { x: 490, y: -2170, width: 170, height: 45, color: "#2f3640" },
+  { x: 250, y: -2380, width: 400, height: 60, color: "#d35400", type: "summit" }
+];
+
+const summitY = -2380;
+
 function resetPlayer() {
   playerX = 450;
   playerY = 470;
