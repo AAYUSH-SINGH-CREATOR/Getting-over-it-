@@ -69,13 +69,37 @@ const platforms = [
 
 const summitY = -2380;
 
+let mouseScreenX = 450;
+let mouseScreenY = 300;
+
 function resetPlayer() {
   playerX = 450;
   playerY = 470;
   playerVx = 0;
   playerVy = 0;
   isGrounded = false;
+  gameWon=false;
+  startTime=Date.now();
+  fallCount=0;
+  highestAltitudeReached=0;
+  lastPlayerY=playerY;
+  winOverlay.classList.add("hidden");
 }
+
+canvas.addEventListener("mousemove", function(event) {
+  const rect = canvas.getBoundingClientRect();
+  mouseScreenX = event.clientX - rect.left;
+  mouseScreenY = event.clientY - rect.top;
+});
+
+window.addEventListener("keydown", function(event) {
+  if (event.key === "r" || event.key === "R") {
+    resetPlayer();
+  }
+});
+
+restartBtn.addEventListener("click", resetPlayer);
+playAgainBtn.addEventListener("click", resetPlayer);
 
 function updatePhysics() {
   playerVy += gravity;
