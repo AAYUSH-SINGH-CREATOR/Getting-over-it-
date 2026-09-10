@@ -277,6 +277,7 @@ function updatePhysics() {
   cameraY += (targetCameraY - cameraY) * 0.1;
   updateParticles();
   updateGameInfo();
+  checkWinCondition();
 }
 
 function drawBackground() {
@@ -536,6 +537,16 @@ function updateGameInfo() {
 
   if (meters > highestAltitudeReached) {
     highestAltitudeReached = meters;
+  }
+}
+
+function checkWinCondition() {
+  if (playerY <= summitY + 20 && !gameWon) {
+    gameWon = true;
+    const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
+    winTimeText.textContent = elapsedSeconds + "s";
+    winFallsText.textContent = fallCount;
+    winOverlay.classList.remove("hidden");
   }
 }
 
