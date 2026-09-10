@@ -236,10 +236,73 @@ const auroraLayers = [
 ];
 
 function drawPlayerAndHammer() {
+  ctx.strokeStyle = "#a0522d";
+  ctx.lineWidth = 7;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(playerX, playerY - 8);
+  ctx.lineTo(hammerTipX, hammerTipY);
+  ctx.stroke();
+
+  ctx.save();
+  ctx.translate(hammerTipX, hammerTipY);
+  ctx.rotate(hammerAngle + Math.PI / 2);
+  ctx.fillStyle = "#7f8c8d";
+  ctx.fillRect(-14, -10, 28, 20);
+  ctx.strokeStyle = "#bdc3c7";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(-14, -10, 28, 20);
+  ctx.fillStyle = "#2c3e50";
+  ctx.fillRect(-4, -4, 8, 8);
+  ctx.restore();
+
   ctx.fillStyle = "#2f3640";
   ctx.beginPath();
   ctx.arc(playerX, playerY + 4, playerRadius, 0, Math.PI * 2);
   ctx.fill();
+  ctx.strokeStyle = "#718093";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(playerX, playerY + 4, playerRadius, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.strokeRect(playerX - playerRadius - 4, playerY, 4, 8);
+  ctx.strokeRect(playerX + playerRadius, playerY, 4, 8);
+
+  ctx.fillStyle = "#e74c3c";
+  ctx.beginPath();
+  ctx.arc(playerX, playerY - 6, 13, Math.PI, 0, false);
+  ctx.fill();
+  ctx.fillStyle = "#f5cd79";
+  ctx.beginPath();
+  ctx.arc(playerX, playerY - 20, 10, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#303952";
+  ctx.beginPath();
+  ctx.arc(playerX, playerY - 22, 10, Math.PI, 0, false);
+  ctx.fill();
+
+  const eyeLookX = Math.cos(hammerAngle) * 3;
+  const eyeLookY = Math.sin(hammerAngle) * 2;
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.arc(playerX - 3, playerY - 20, 3, 0, Math.PI * 2);
+  ctx.arc(playerX + 3, playerY - 20, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#2f3542";
+  ctx.beginPath();
+  ctx.arc(playerX - 3 + eyeLookX, playerY - 20 + eyeLookY, 1.5, 0, Math.PI * 2);
+  ctx.arc(playerX + 3 + eyeLookX, playerY - 20 + eyeLookY, 1.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = "#f5cd79";
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(playerX, playerY - 8);
+  const handX = playerX + Math.cos(hammerAngle) * 18;
+  const handY = playerY - 8 + Math.sin(hammerAngle) * 18;
+  ctx.lineTo(handX, handY);
+  ctx.stroke();
 }
 
 function draw() {
