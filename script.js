@@ -84,6 +84,7 @@ function resetPlayer() {
   highestAltitudeReached=0;
   lastPlayerY=playerY;
   winOverlay.classList.add("hidden");
+  playAgainBtn.classList.add("hidden");
 }
 
 canvas.addEventListener("mousemove", function(event) {

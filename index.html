@@ -28,6 +28,14 @@
     <div class="canvas-wrapper">
       <canvas id="gameCanvas" width="900" height="650"></canvas>
     </div>
+    <div id="winOverlay" class="win-overlay hidden">
+      <div class="win-card">
+        <h2>You reached the summit!</h2>
+        <p>Time: <span id="winTime">0s</span></p>
+        <p>Falls: <span id="winFalls">0</span></p>
+        <button id="playAgainBtn" class="btn">Play Again</button>
+      </div>
+    </div>
 
     <footer class="game-footer">
       <div class="guide-box">
