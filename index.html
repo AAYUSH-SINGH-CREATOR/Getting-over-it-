@@ -10,8 +10,16 @@
 <body>
   <div id="homeOverlay" class="home-overlay">
     <div class="home-content">
-      <h1>Climb Up!</h1>
-      <p>A Physics Climbing Project</p>
+      <h1>Hold on!</h1>
+      <p>It's harder than it looks.</p>
+      <div class="difficulty-container">
+        <span class="diff-label">Select Difficulty:</span>
+        <div class="difficulty-buttons">
+          <button type="button" class="btn-diff" data-level="easy">Easy</button>
+          <button type="button" class="btn-diff active" data-level="medium">Medium</button>
+          <button type="button" class="btn-diff" data-level="hard">Hard</button>
+        </div>
+      </div>
       <button id="playBtn" class="btn btn-play">Play</button>
         <p class="motivatingText">Falling is part of the journey. Getting back up is the entire game</p>
       <strong>Press R to restart... if you can't take it anymore.</strong>

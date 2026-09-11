@@ -61,7 +61,7 @@ const winTimeText = document.getElementById("winTime");
 const homeOverlay = document.getElementById("homeOverlay");
 const playBtn = document.getElementById("playBtn");
 
-const gravity = 0.2;
+let gravity = 0.2;
 const friction = 0.985;
 const groundFriction = 0.92;
 
@@ -80,7 +80,7 @@ let playerVx = 0;
 let playerVy = 0;
 let isGrounded = false;
 
-const hammerMaxLength = 95;
+let hammerMaxLength = 95;
 const hammerMinLength = 35;
 const hammerHeadRadius = 14;
 
@@ -89,6 +89,41 @@ let hammerTipX = playerX;
 let hammerTipY = playerY - hammerMaxLength;
 let prevHammerTipX = hammerTipX;
 let prevHammerTipY = hammerTipY;
+
+const difficultySettings = {
+  easy: {
+    gravity: 0.1,
+    hammerMaxLength: 105
+  },
+  medium: {
+    gravity: 0.35,
+    hammerMaxLength: 95
+  },
+  hard: {
+    gravity: 0.55,
+    hammerMaxLength: 85
+  }
+};
+
+let currentDifficulty = "medium";
+
+const diffButtons = document.querySelectorAll(".btn-diff");
+diffButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    diffButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentDifficulty = btn.dataset.level;
+    applyDifficulty(currentDifficulty);
+  });
+});
+
+function applyDifficulty(level) {
+  const config = difficultySettings[level];
+  gravity = config.gravity;
+  hammerMaxLength = config.hammerMaxLength;
+}
+applyDifficulty("medium");
 
 const platforms = [
   { x: 0, y: 520, width: 900, height: 150, color: "#2d3436", type: "ground" },
