@@ -5,7 +5,7 @@ const hammerSound = new Audio("sounds/hammer-hit.mp3");
 const winSound = new Audio("sounds/win.mp3");
 const bgMusic = new Audio("sounds/bgMusic.mp3")
 
-hammerSound.volume = 0.3;
+hammerSound.volume = 0.4;
 winSound.volume = 0.6;
 bgMusic.volume= 1;
 
