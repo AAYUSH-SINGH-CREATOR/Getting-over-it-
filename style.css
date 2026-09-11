@@ -93,6 +93,19 @@ body {
   background-color: #ff6b6b;
 }
 
+.btn-mute {
+  background-color: #f39c12; 
+  color: #ffffff;
+}
+
+.btn-mute:hover {
+  background-color: #f1c40f; 
+}
+
+.btn-muted-state {
+  background-color: #7f8c8d !important; 
+}
+
 .canvas-wrapper {
   position: relative;
   border: 4px solid #3d4a5d;

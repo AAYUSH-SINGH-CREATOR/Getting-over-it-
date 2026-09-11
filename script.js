@@ -7,15 +7,34 @@ winSound.volume = 0.6;
 
 
 const bgMusic = new Audio("sounds/bgMusic.mp3")
-bgMusic.volume= 0.3;
+bgMusic.volume = 0.3;
 bgMusic.loop = true;
 bgMusic.play();
+
+let isMuted = false;
+
+function mute() {
+  isMuted = !isMuted;
+  bgMusic.muted = isMuted;
+  hammerSound.muted = isMuted;
+  winSound.muted = isMuted;
+
+  if (isMuted) {
+    muteBtn.textContent = "Unmute (M)";
+    muteBtn.classList.add("btn-muted-state");
+  } else {
+    muteBtn.textContent = "Mute (M)";
+    muteBtn.classList.remove("btn-muted-state");
+  }
+}
+
+muteBtn.addEventListener("click", mute);
 
 window.addEventListener("click", () => {
   hammerSound.play().then(() => {
     hammerSound.pause();
     hammerSound.currentTime = 0;
-  }).catch(() => {});
+  }).catch(() => { });
 }, { once: true });
 
 let lastHammerSoundTime = 0;
@@ -99,30 +118,30 @@ function resetPlayer() {
   playerVx = 0;
   playerVy = 0;
   isGrounded = false;
-  gameWon=false;
-  startTime=Date.now();
-  fallCount=0;
-  highestAltitudeReached=0;
-  lastPlayerY=playerY;
+  gameWon = false;
+  startTime = Date.now();
+  fallCount = 0;
+  highestAltitudeReached = 0;
+  lastPlayerY = playerY;
   winOverlay.classList.add("hidden");
   playAgainBtn.classList.add("hidden");
-  bgMusic.currentTime=0;
-  bgMusic.play().catch(()=>{});
+  bgMusic.currentTime = 0;
+  bgMusic.play().catch(() => { });
 }
 
 playBtn.addEventListener("click", () => {
   homeOverlay.classList.add("hidden");
   resetPlayer();
-  bgMusic.play().catch((err) =>{});
+  bgMusic.play().catch((err) => { });
 });
 
-canvas.addEventListener("mousemove", function(event) {
+canvas.addEventListener("mousemove", function (event) {
   const rect = canvas.getBoundingClientRect();
   mouseScreenX = event.clientX - rect.left;
   mouseScreenY = event.clientY - rect.top;
 });
 
-window.addEventListener("keydown", function(event) {
+window.addEventListener("keydown", function (event) {
   if (event.key === "r" || event.key === "R") {
     resetPlayer();
   }
@@ -186,7 +205,7 @@ function handlePlayerCollisions() {
       }
       const tangentX = -hit.ny;
     }
-    
+
   }
 }
 
@@ -209,7 +228,7 @@ function handleHammerCollisions() {
       if (playerVy < -maxSpeed) playerVy = -maxSpeed;
 
       const swingSpeed = Math.abs(hammerTipX - prevHammerTipX) + Math.abs(hammerTipY - prevHammerTipY);
-    
+
       const tangentX = -hit.ny;
       const tangentY = hit.nx;
 
@@ -229,14 +248,14 @@ function handleHammerCollisions() {
         const now = Date.now();
 
         if (now - lastHammerSoundTime > 120) {
-          const minSpeed=2;
-          const maxSpeed=25;
-          const clampedSpeed=Math.min(maxSpeed, Math.max(swingSpeed, minSpeed));
-          const t= (clampedSpeed-minSpeed)/(maxSpeed-minSpeed);
-          hammerSound.volume=0.2+t*0.8;
-          hammerSound.playbackRate=0.8+t*0.4;
+          const minSpeed = 2;
+          const maxSpeed = 25;
+          const clampedSpeed = Math.min(maxSpeed, Math.max(swingSpeed, minSpeed));
+          const t = (clampedSpeed - minSpeed) / (maxSpeed - minSpeed);
+          hammerSound.volume = 0.2 + t * 0.8;
+          hammerSound.playbackRate = 0.8 + t * 0.4;
           hammerSound.currentTime = 0;
-          hammerSound.play().catch(() => {});
+          hammerSound.play().catch(() => { });
           lastHammerSoundTime = now;
         }
       }
@@ -305,7 +324,7 @@ function updatePhysics() {
 
   handleHammerCollisions();
   handlePlayerCollisions();
-  
+
 
   if (playerX < 50 + playerRadius) {
     playerX = 50 + playerRadius;
@@ -369,11 +388,11 @@ function drawPlatforms() {
 
 class AuroraWave {
   constructor(baseY, amplitude, frequency, speed, colorStops) {
-    this.baseY = baseY;           
-    this.amplitude = amplitude;   
-    this.frequency = frequency;   
-    this.speed = speed;          
-    this.colorStops = colorStops; 
+    this.baseY = baseY;
+    this.amplitude = amplitude;
+    this.frequency = frequency;
+    this.speed = speed;
+    this.colorStops = colorStops;
     this.timeOffset = Math.random() * 100;
   }
 
@@ -383,54 +402,54 @@ class AuroraWave {
 
   draw() {
     ctx.save();
-    
+
     ctx.globalCompositeOperation = 'screen';
-    ctx.globalAlpha = 0.95; 
+    ctx.globalAlpha = 0.95;
 
     ctx.beginPath();
-    ctx.moveTo(0, canvas.height); 
+    ctx.moveTo(0, canvas.height);
 
-    
+
     for (let x = 0; x <= canvas.width; x += 10) {
-      
-      const y = this.baseY + 
-                Math.sin(x * this.frequency + this.timeOffset) * this.amplitude+
-                Math.cos(x * 0.005 - this.timeOffset) * (this.amplitude * 0.3);
-                
+
+      const y = this.baseY +
+        Math.sin(x * this.frequency + this.timeOffset) * this.amplitude +
+        Math.cos(x * 0.005 - this.timeOffset) * (this.amplitude * 0.3);
+
       ctx.lineTo(x, y);
     }
 
-    ctx.lineTo(canvas.width, canvas.height); 
+    ctx.lineTo(canvas.width, canvas.height);
     ctx.closePath();
 
     const gradient = ctx.createLinearGradient(0, this.baseY - this.amplitude * 1.5, 0, canvas.height);
-    gradient.addColorStop(0, this.colorStops[0]); 
-    gradient.addColorStop(0.4, this.colorStops[1]); 
-    gradient.addColorStop(0.8, this.colorStops[2]); 
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');   
+    gradient.addColorStop(0, this.colorStops[0]);
+    gradient.addColorStop(0.4, this.colorStops[1]);
+    gradient.addColorStop(0.8, this.colorStops[2]);
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    const waveY = this.baseY + 
-                Math.sin(mouseScreenX * this.frequency + this.timeOffset) * this.amplitude+
-                Math.cos(mouseScreenX * 0.005 - this.timeOffset) * (this.amplitude * 0.3);
-    const distance= Math.abs(mouseScreenY-waveY);
+    const waveY = this.baseY +
+      Math.sin(mouseScreenX * this.frequency + this.timeOffset) * this.amplitude +
+      Math.cos(mouseScreenX * 0.005 - this.timeOffset) * (this.amplitude * 0.3);
+    const distance = Math.abs(mouseScreenY - waveY);
 
-    const glow= Math.max(0, 1-distance/100);
+    const glow = Math.max(0, 1 - distance / 100);
 
-    if (glow>0){
-      const glowGradient= ctx.createRadialGradient(mouseScreenX, waveY, 0, mouseScreenX, waveY, 150);
-      glowGradient.addColorStop(0, this.colorStops[0]); 
+    if (glow > 0) {
+      const glowGradient = ctx.createRadialGradient(mouseScreenX, waveY, 0, mouseScreenX, waveY, 150);
+      glowGradient.addColorStop(0, this.colorStops[0]);
       glowGradient.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.fillStyle = glowGradient;
-      ctx.globalAlpha=glow*0.8;
+      ctx.globalAlpha = glow * 0.8;
       ctx.beginPath();
-      ctx.arc(mouseScreenX, waveY, 150, 0, 2* Math.PI);
+      ctx.arc(mouseScreenX, waveY, 150, 0, 2 * Math.PI);
       ctx.fill();
     }
-    
+
     ctx.restore();
   }
 }
@@ -556,9 +575,9 @@ function drawPlayerAndHammer() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBackground();
-  auroraLayers.forEach(layer =>{
-   layer.update();
-   layer.draw();
+  auroraLayers.forEach(layer => {
+    layer.update();
+    layer.draw();
   });
   ctx.save();
   ctx.translate(0, -cameraY);
@@ -587,13 +606,13 @@ function checkWinCondition() {
   if (playerY <= summitY + 20 && !gameWon) {
     gameWon = true;
     winSound.currentTime = 0;
-    winSound.play().catch(() => {});
+    winSound.play().catch(() => { });
     bgMusic.pause();
     const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
     winTimeText.textContent = elapsedSeconds + "s";
     winFallsText.textContent = fallCount;
     winOverlay.classList.remove("hidden");
-    
+
   }
 }
 
