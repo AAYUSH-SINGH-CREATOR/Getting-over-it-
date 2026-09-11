@@ -57,11 +57,11 @@ const motivationalText = document.getElementById("motivationalText");
 const winOverlay = document.getElementById("winOverlay");
 const playAgainBtn = document.getElementById("playAgainBtn");
 const winTimeText = document.getElementById("winTime");
-const winFallsText = document.getElementById("winFalls");
+
 const homeOverlay = document.getElementById("homeOverlay");
 const playBtn = document.getElementById("playBtn");
 
-const gravity = 0.35;
+const gravity = 0.2;
 const friction = 0.985;
 const groundFriction = 0.92;
 
@@ -135,7 +135,6 @@ function resetPlayer() {
   highestAltitudeReached = 0;
   lastPlayerY = playerY;
   winOverlay.classList.add("hidden");
-  playAgainBtn.classList.add("hidden");
   bgMusic.currentTime = 0;
   bgMusic.play().catch(() => { });
 }
@@ -621,7 +620,6 @@ function checkWinCondition() {
     bgMusic.pause();
     const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
     winTimeText.textContent = elapsedSeconds + "s";
-    winFallsText.textContent = fallCount;
     winOverlay.classList.remove("hidden");
 
   }
