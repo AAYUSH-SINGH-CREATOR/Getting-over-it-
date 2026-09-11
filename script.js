@@ -5,6 +5,12 @@ const hammerSound = new Audio("sounds/hammer-hit.mp3");
 const winSound = new Audio("sounds/win.mp3");
 winSound.volume = 0.6;
 
+const backbtnn = document.querySelector("#backBtn");
+console.log(backbtnn);
+backBtn.addEventListener("click", () => {
+  homeOverlay.classList.remove("hidden");
+  bgMusic.pause(); 
+});
 
 const bgMusic = new Audio("sounds/bgMusic.mp3")
 bgMusic.volume = 0.3;
