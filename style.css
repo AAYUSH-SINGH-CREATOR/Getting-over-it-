@@ -200,3 +200,46 @@ body {
 .win-card .btn:hover {
   background-color: #1dd1a1;
 }
+
+.home-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("images/background.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.home-content {
+  text-align: center;
+  padding: 40px 60px;
+  background-color: rgba(11, 15, 23, 0.55);
+  border-radius: 14px;
+  backdrop-filter: blur(2px);
+}
+
+.home-content h1 {
+  font-size: 40px;
+  color: #ff9f43;
+  margin-bottom: 8px;
+}
+
+.home-content p {
+  color: #c8d6e5;
+  margin-bottom: 24px;
+  font-size: 16px;
+}
+
+.btn-play {
+  background-color: #150b30;
+  color: #ffffff;
+  font-size: 1.1rem;
+  padding: 12px 32px;
+}
+
+.btn-play:hover {
+  background-color: #241c6e;
+}
