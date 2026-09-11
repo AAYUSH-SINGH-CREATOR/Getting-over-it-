@@ -6,7 +6,6 @@ const winSound = new Audio("sounds/win.mp3");
 winSound.volume = 0.6;
 
 const backbtnn = document.querySelector("#backBtn");
-console.log(backbtnn);
 backBtn.addEventListener("click", () => {
   homeOverlay.classList.remove("hidden");
   bgMusic.pause(); 
@@ -35,6 +34,12 @@ function mute() {
 }
 
 muteBtn.addEventListener("click", mute);
+document.addEventListener("keydown", (e)=>{
+  // console.log(e.key);
+  if(e.key === "M" || e.key === "m"){
+    mute();
+  }
+})
 
 window.addEventListener("click", () => {
   hammerSound.play().then(() => {
