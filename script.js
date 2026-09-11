@@ -3,9 +3,11 @@ const ctx = canvas.getContext("2d");
 
 const hammerSound = new Audio("sounds/hammer-hit.mp3");
 const winSound = new Audio("sounds/win.mp3");
+const bgMusic = new Audio("sounds/bgMusic.mp3")
 
-hammerSound.volume = 0.7;
+hammerSound.volume = 0.3;
 winSound.volume = 0.6;
+bgMusic.volume= 1;
 
 window.addEventListener("click", () => {
   hammerSound.play().then(() => {
@@ -24,6 +26,8 @@ const winOverlay = document.getElementById("winOverlay");
 const playAgainBtn = document.getElementById("playAgainBtn");
 const winTimeText = document.getElementById("winTime");
 const winFallsText = document.getElementById("winFalls");
+const homeOverlay = document.getElementById("homeOverlay");
+const playBtn = document.getElementById("playBtn");
 
 const gravity = 0.35;
 const friction = 0.985;
@@ -100,7 +104,15 @@ function resetPlayer() {
   lastPlayerY=playerY;
   winOverlay.classList.add("hidden");
   playAgainBtn.classList.add("hidden");
+  bgMusic.currentTime=0;
+  bgMusic.play().catch(()=>{});
 }
+
+playBtn.addEventListener("click", () => {
+  homeOverlay.classList.add("hidden");
+  resetPlayer();
+  bgMusic.play().catch((err) =>{});
+});
 
 canvas.addEventListener("mousemove", function(event) {
   const rect = canvas.getBoundingClientRect();
@@ -568,6 +580,7 @@ function checkWinCondition() {
     gameWon = true;
     winSound.currentTime = 0;
     winSound.play().catch(() => {});
+    bgMusic.pause();
     const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
     winTimeText.textContent = elapsedSeconds + "s";
     winFallsText.textContent = fallCount;
