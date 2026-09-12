@@ -8,7 +8,7 @@ winSound.volume = 0.6;
 const backbtnn = document.querySelector("#backBtn");
 backBtn.addEventListener("click", () => {
   homeOverlay.classList.remove("hidden");
-  bgMusic.pause(); 
+  bgMusic.pause();
 });
 
 const bgMusic = new Audio("sounds/bgMusic.mp3")
@@ -34,9 +34,9 @@ function mute() {
 }
 
 muteBtn.addEventListener("click", mute);
-document.addEventListener("keydown", (e)=>{
+document.addEventListener("keydown", (e) => {
   // console.log(e.key);
-  if(e.key === "M" || e.key === "m"){
+  if (e.key === "M" || e.key === "m") {
     mute();
   }
 })
@@ -106,7 +106,25 @@ const difficultySettings = {
   }
 };
 
-let currentDifficulty = "medium";
+let currentDifficulty = "mplayaedium";
+
+function proDiff() {
+  if (currentDifficulty === "easy") {
+    currentDifficulty = "medium";
+  } else if (currentDifficulty === "medium") {
+    currentDifficulty = "hard";
+  }
+
+  applyDifficulty(currentDifficulty);
+
+  const diffButtons = document.querySelectorAll(".btn-diff");
+  diffButtons.forEach(btn => {
+    btn.classList.remove("active");
+    if (btn.dataset.level === currentDifficulty) {
+      btn.classList.add("active");
+    }
+  });
+}
 
 const diffButtons = document.querySelectorAll(".btn-diff");
 diffButtons.forEach(btn => {
@@ -185,18 +203,18 @@ playBtn.addEventListener("click", () => {
 
   const randomQuote = quotesList[Math.floor(Math.random() * quotesList.length)];
   quoteText.textContent = `"${randomQuote}"`;
-  
-  quoteOverlay.classList.remove("hidden", "fade-out"); 
-  
+
+  quoteOverlay.classList.remove("hidden", "fade-out");
+
   setTimeout(() => {
     quoteOverlay.classList.add("fade-out");
-    
-      setTimeout(() => {
-      quoteOverlay.classList.add("hidden"); 
-      resetPlayer(); 
-      bgMusic.play().catch((err) =>{});
-    }, 2000); 
-    
+
+    setTimeout(() => {
+      quoteOverlay.classList.add("hidden");
+      resetPlayer();
+      bgMusic.play().catch((err) => { });
+    }, 2000);
+
   }, 3000);
 });
 
@@ -213,7 +231,10 @@ window.addEventListener("keydown", function (event) {
 });
 
 restartBtn.addEventListener("click", resetPlayer);
-playAgainBtn.addEventListener("click", resetPlayer);
+playAgainBtn.addEventListener("click", ()=>{
+  resetPlayer();
+  proDiff();
+});
 
 function checkCircleRectCollision(circleX, circleY, radius, rect) {
   const closestX = Math.max(rect.x, Math.min(circleX, rect.x + rect.width));
