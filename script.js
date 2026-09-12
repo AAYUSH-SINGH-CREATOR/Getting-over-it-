@@ -134,14 +134,14 @@ function applyDifficulty(level) {
   gravity = config.gravity;
   hammerMaxLength = config.hammerMaxLength;
   const displayLevel = level.charAt(0).toUpperCase() + level.slice(1);
-  
+
   hudDifficultyText.textContent = displayLevel;
   winDifficultyText.textContent = displayLevel;
 
   let levelColor = "#e67e22";
-  if (level === "easy") levelColor = "#10ac84"; 
-  if (level === "hard") levelColor = "#ee5253"; 
-  
+  if (level === "easy") levelColor = "#10ac84";
+  if (level === "hard") levelColor = "#ee5253";
+
   hudDifficultyText.style.color = levelColor;
   winDifficultyText.style.color = levelColor;
 }
@@ -160,6 +160,10 @@ diffButtons.forEach(btn => {
 const quotesList = [
   "He conquers who continues.",
   "No wall is higher than the resolve to climb it.",
+  "Fall seven times, stand up eight.",
+  "The best way out is always through.",
+  "Success is walking from failure to failure with no loss of enthusiasm.",
+  "The stars endure the night without becoming night."
 ];
 
 
@@ -217,8 +221,9 @@ playBtn.addEventListener("click", () => {
 
   const randomQuote = quotesList[Math.floor(Math.random() * quotesList.length)];
   quoteText.textContent = `"${randomQuote}"`;
-
+  motivationalText.textContent = `"${randomQuote}"`;
   quoteOverlay.classList.remove("hidden", "fade-out");
+
 
   setTimeout(() => {
     quoteOverlay.classList.add("fade-out");
@@ -245,7 +250,7 @@ window.addEventListener("keydown", function (event) {
 });
 
 restartBtn.addEventListener("click", resetPlayer);
-playAgainBtn.addEventListener("click", ()=>{
+playAgainBtn.addEventListener("click", () => {
   resetPlayer();
   proDiff();
 });
