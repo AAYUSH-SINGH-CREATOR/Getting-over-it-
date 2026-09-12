@@ -11,7 +11,7 @@
   <div id="homeOverlay" class="home-overlay">
     <div class="home-content">
       <h1>Hold on!</h1>
-      <p>It's harder than it looks.</p>
+      <p>It's harder than it looks</p>
       <div class="difficulty-container">
         <span class="diff-label">Select Difficulty:</span>
         <div class="difficulty-buttons">
@@ -32,7 +32,7 @@
   <div class="game-container">
     <header class="game-header">
       <div class="title-area">
-        <h1>Climb Up! <span>A Physics Climbing Project</span></h1>
+        <h1>Hold on!<span>It's harder than it looks</span></h1>
       </div>
       <div class="hud">
         <div class="hud-item">
@@ -42,6 +42,10 @@
         <div class="hud-item">
           <span class="hud-label">Progress:</span>
           <span id="progressText" class="hud-value">0%</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Level:</span>
+          <span id="hudDifficulty" class="hud-value">Medium</span>
         </div>
         <button id="muteBtn" class="btn btn-mute" title="Press 'M' to mute/unmute">Mute (M)</button>
         <button id="restartBtn" class="btn btn-restart" title="Press 'R' to reset">Restart (R)</button>
@@ -55,6 +59,7 @@
       <div class="win-card">
         <h2>You reached the summit!</h2>
         <p>Time: <span id="winTime">0s</span></p>
+        <p>Difficulty Beaten: <strong id="winDifficulty">Medium</strong></p>
         <button id="playAgainBtn" class="btn">Play Again</button>
       </div>
     </div>

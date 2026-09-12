@@ -61,6 +61,9 @@ const quoteOverlay = document.getElementById("quoteOverlay");
 const quoteText = document.getElementById("quoteText");
 const homeOverlay = document.getElementById("homeOverlay");
 const playBtn = document.getElementById("playBtn");
+const hudDifficultyText = document.getElementById("hudDifficulty");
+const winDifficultyText = document.getElementById("winDifficulty");
+
 
 let gravity = 0.2;
 const friction = 0.985;
@@ -126,6 +129,23 @@ function proDiff() {
   });
 }
 
+function applyDifficulty(level) {
+  const config = difficultySettings[level];
+  gravity = config.gravity;
+  hammerMaxLength = config.hammerMaxLength;
+  const displayLevel = level.charAt(0).toUpperCase() + level.slice(1);
+  
+  hudDifficultyText.textContent = displayLevel;
+  winDifficultyText.textContent = displayLevel;
+
+  let levelColor = "#e67e22";
+  if (level === "easy") levelColor = "#10ac84"; 
+  if (level === "hard") levelColor = "#ee5253"; 
+  
+  hudDifficultyText.style.color = levelColor;
+  winDifficultyText.style.color = levelColor;
+}
+
 const diffButtons = document.querySelectorAll(".btn-diff");
 diffButtons.forEach(btn => {
   btn.addEventListener("click", () => {
@@ -142,12 +162,6 @@ const quotesList = [
   "No wall is higher than the resolve to climb it.",
 ];
 
-function applyDifficulty(level) {
-  const config = difficultySettings[level];
-  gravity = config.gravity;
-  hammerMaxLength = config.hammerMaxLength;
-}
-applyDifficulty("medium");
 
 const platforms = [
   { x: 0, y: 520, width: 900, height: 150, color: "#2d3436", type: "ground" },
