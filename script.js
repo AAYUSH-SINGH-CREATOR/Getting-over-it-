@@ -708,7 +708,7 @@ function updateGameInfo() {
 }
 
 function checkWinCondition() {
-  if (playerY <= summitY + 20 && !gameWon) {
+  if (playerY <= summitY && playerX >= 250 && playerX <= 650 && !gameWon) {
     gameWon = true;
     winSound.currentTime = 0;
     winSound.play().catch(() => { });
