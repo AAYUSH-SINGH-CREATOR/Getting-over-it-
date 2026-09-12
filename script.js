@@ -57,7 +57,8 @@ const motivationalText = document.getElementById("motivationalText");
 const winOverlay = document.getElementById("winOverlay");
 const playAgainBtn = document.getElementById("playAgainBtn");
 const winTimeText = document.getElementById("winTime");
-
+const quoteOverlay = document.getElementById("quoteOverlay");
+const quoteText = document.getElementById("quoteText");
 const homeOverlay = document.getElementById("homeOverlay");
 const playBtn = document.getElementById("playBtn");
 
@@ -118,6 +119,11 @@ diffButtons.forEach(btn => {
   });
 });
 
+const quotesList = [
+  "He conquers who continues.",
+  "No wall is higher than the resolve to climb it.",
+];
+
 function applyDifficulty(level) {
   const config = difficultySettings[level];
   gravity = config.gravity;
@@ -176,8 +182,22 @@ function resetPlayer() {
 
 playBtn.addEventListener("click", () => {
   homeOverlay.classList.add("hidden");
-  resetPlayer();
-  bgMusic.play().catch((err) => { });
+
+  const randomQuote = quotesList[Math.floor(Math.random() * quotesList.length)];
+  quoteText.textContent = `"${randomQuote}"`;
+  
+  quoteOverlay.classList.remove("hidden", "fade-out"); 
+  
+  setTimeout(() => {
+    quoteOverlay.classList.add("fade-out");
+    
+      setTimeout(() => {
+      quoteOverlay.classList.add("hidden"); 
+      resetPlayer(); 
+      bgMusic.play().catch((err) =>{});
+    }, 2000); 
+    
+  }, 3000);
 });
 
 canvas.addEventListener("mousemove", function (event) {
